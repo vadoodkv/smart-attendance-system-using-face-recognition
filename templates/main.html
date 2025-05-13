@@ -1,0 +1,399 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Attendance System</title>
+    <style>
+        /* Loading Animation */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #a1cfcf 0%, #7a9cc6 100%);
+            background: linear-gradient(to bottom right, #0d0d28, #82d4d4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+
+            background-image: url("{% static 'images/face-recognition-img.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-position: center 20%;
+
+            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.9);
+
+            
+        }
+
+        .loader {
+            width: 64px;
+            height: 64px;
+            position: relative;
+        }
+
+        .loader div {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            background: white;
+            border-radius: 50%;
+            animation: loading 1.2s linear infinite;
+        }
+
+        .loader div:nth-child(1) {
+            top: 6px;
+            left: 6px;
+            animation-delay: 0s;
+        }
+
+        .loader div:nth-child(2) {
+            top: 6px;
+            left: 26px;
+            animation-delay: -0.4s;
+        }
+
+        .loader div:nth-child(3) {
+            top: 6px;
+            left: 45px;
+            animation-delay: -0.8s;
+        }
+
+        .loader div:nth-child(4) {
+            top: 26px;
+            left: 6px;
+            animation-delay: -0.4s;
+        }
+
+        .loader div:nth-child(5) {
+            top: 26px;
+            left: 26px;
+            animation-delay: -0.8s;
+        }
+
+        .loader div:nth-child(6) {
+            top: 26px;
+            left: 45px;
+            animation-delay: -1.2s;
+        }
+
+        .loader div:nth-child(7) {
+            top: 45px;
+            left: 6px;
+            animation-delay: -0.8s;
+        }
+
+        .loader div:nth-child(8) {
+            top: 45px;
+            left: 26px;
+            animation-delay: -1.2s;
+        }
+
+        .loader div:nth-child(9) {
+            top: 45px;
+            left: 45px;
+            animation-delay: -1.6s;
+        }
+
+        @keyframes loading {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.3;
+                transform: scale(0.5);
+            }
+        }
+        @keyframes fadein{
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Main Content (hidden during loading) */
+        .content {
+            display: none;
+        }
+
+        /* Rest of your existing styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #a1cfcf 0%, #7a9cc6 100%);
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: #2c3e50;
+
+            background-image: url("{% static 'images/face-recognition-img.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-position: center 20%;
+
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.9); 
+
+        }
+
+        
+
+        body::-webkit-scrollbar {
+            display: none;                
+        }
+
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 900px;
+            animation: fadein 1s ease-in;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 10px 1px 30px rgba(0, 0, 0, 0.1);
+            color: rgb(255, 255, 255);
+            font-family: 'Courier New', Courier, monospace;
+            
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            color: white;
+            
+        }
+
+        .portal-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+            color: white;
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            bottom: -8px;
+            left: 25%;
+            border-radius: 3px;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 250px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-weight: 600;
+            color: #001c3b; 
+        }
+
+        .card p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            color: #ffffff;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: white;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .employee-btn {
+            background: #3498db;
+            color: white;
+        }
+
+        .admin-btn {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .attendance-btn {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            color: white;
+        }
+
+        .attendance-portal {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+
+
+
+    </style>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div class="loader-container" id="loader">
+        <div class="loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="loading-text">Initializing Smart Attendance System...</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content" id="content">
+        <div class="container">
+            <h1>Smart Attendance System</h1>
+            <p class="subtitle">Facial recognition-based attendance tracking solution</p>
+
+            <!-- Attendance Portal Card - Centered Left -->
+            <div class="attendance-portal">
+                <div class="card" onclick="window.location.href='login'"
+                    style="width: 300px; background: rgba(255,255,255,0.3);">
+                    <h2>📷 Attendance Dashboard</h2>
+                    <p>Mark your attendance using facial recognition and live video capture</p>
+                    <button class="btn attendance-btn" onclick="location.href='home'">Launch Dashboard</button>
+                </div>
+            </div>
+
+            <!-- Employee Section -->
+            <div class="portal-section">
+                <h2 class="section-title">Employee Portal</h2>
+                <div class="card-container">
+                    <div class="card" onclick="window.location.href='employee_signup'">
+                        <h2>New Employee?</h2>
+                        <p>Register your facial data and create account</p>
+                        <button class="btn employee-btn">Employee Sign Up</button>
+                    </div>
+
+                    <div class="card" onclick="window.location.href='employee_login'">
+                        <h2>Employee Login</h2>
+                        <p>Access your attendance records and dashboard</p>
+                        <button class="btn employee-btn">Employee Sign In</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Admin Section - Sign In Only -->
+            <div class="portal-section">
+                <h2 class="section-title">Admin Portal</h2>
+                <div class="card-container">
+                    <div class="card" onclick="window.location.href='admin'">
+                        <h2>Admin Login</h2>
+                        <p>Manage attendance records and system settings</p>
+                        <button class="btn admin-btn">Admin Sign In</button>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="footer"> SMART ATTENDANCE SYSTEM By MOHAMED ABDUL VADOOD K V</p>
+        </div>
+    </div>
+
+    <script>
+        // Simulate loading time (you can remove this in production)
+        setTimeout(function () {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(function () {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            }, 500); // matches the CSS transition time
+        }, 1000); // 2 seconds loading time
+
+        // For real implementation, you would use:
+        // window.addEventListener('load', function() {
+        //     document.getElementById('loader').style.opacity = '0';
+        //     setTimeout(function() {
+        //         document.getElementById('loader').style.display = 'none';
+        //         document.getElementById('content').style.display = 'block';
+        //     }, 500);
+        // });
+    </script>
+</body>
+
+</html>

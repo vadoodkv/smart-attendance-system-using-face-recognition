@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Attendance Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Main Theme Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-top: 5.5rem;
+        }
+
+        .profile-pic {
+            border-top: 10px;
+            width: 180px;
+            height: 180px;
+            border-radius: 35%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.658);
+            margin-bottom: 0rem;
+            animation: fadei 1.5s ease-out;
+        }
+
+        .back-button {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 12px 25px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .back-button:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateX(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button i {
+        font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+        .back-button {
+            top: 15px;
+            left: 15px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            }
+        }
+        @keyframes fadei {
+            from{
+                opacity: 0;
+                transform: translateY(-60px);
+            }
+            to{
+                opacity: 1;
+                transform: translateY(0px);
+            }
+        }
+
+
+        /* Header Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 5s ease;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            
+
+        }
+
+        .stat-card1 {            /*11111111111111111111111111111111111*/
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            animation: fadeIn1 2s ease;
+        }
+
+        .stat-card1:hover {
+            transform: translateY(-5px);
+            box-shadow: 10px 8px 32px 10px rgba(31, 38, 135, 0.1);
+            background: rgba(14, 13, 13, 0.315);
+            
+        }
+
+        .stat-card2 {            /*22222222222222222222222222222222*/
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+            animation: fadeIn2 2s ease;
+        }
+
+        .stat-card2:hover {
+            transform: translateY(-5px);
+            box-shadow: 10px 8px 32px 10px rgba(31, 38, 135, 0.1);
+            background: rgba(14, 13, 13, 0.315);
+            
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: #00ff8cec;
+            
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 1;
+            color: #ede3e3;
+        }
+
+        /* Visualization Section */
+        .visualization-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(34, 33, 33, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Attendance Table */
+        .table-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow-x: auto;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            
+        }
+
+        .attendance-table thead th {
+            background: rgba(45, 47, 48, 0.712);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(5px);
+            
+        }
+
+        .attendance-table tbody tr {
+            transition: all 0.6s ease;
+           
+    
+        }
+
+        .attendance-table tbody tr:hover {
+            background: rgba(14, 13, 13, 0.315);
+            
+            
+            
+        }
+
+        .attendance-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-radius: 7px;            
+        }
+
+        .total-hours {
+            color: rgb(255, 255, 255);
+            font-style: oblique;
+        }
+        
+        .present {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .partial {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .absent {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn1 {
+            from {
+                opacity: 0;
+                transform: translateX(-220px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn2 {
+            from {
+                opacity: 0;
+                transform: translateX(220px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .visualization-section {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                min-width: 150px;
+            }
+
+            .attendance-table thead {
+                display: none;
+            }
+
+            .attendance-table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .attendance-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                text-align: right;
+            }
+
+            .attendance-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-section">
+        {% if student.image %}
+        <img src="{{ student.image.url }}" class="profile-pic" alt="Profile">
+        {% endif %}
+    </div>
+    <div class="container">
+        <button class="back-button"onclick="window.location.href='{% url 'employee_dashboard' %}'">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">{{ student.name|title }}</h1>
+            <p class="welcome-subtitle">Department: {{ student.department|title }}</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card1">
+                <div class="stat-label">Days Present</div>
+                <div class="stat-value" id="daysPresent">{{ present_days }}</div>
+                <div class="stat-label">this month</div>
+            </div>
+            <div class="stat-card1">
+                <div class="stat-label">Monthly Hours</div>
+                <div class="stat-value" id="monthlyHours">{{ current_month_duration }}</div>
+                <div class="stat-label">total worked</div>
+            </div>
+            <div class="stat-card2">
+                <div class="stat-label">Average Daily</div>
+                <div class="stat-value" id="avgDaily">{{ average_daily_hours }}</div>
+                <div class="stat-label">hours</div>
+            </div>
+            <div class="stat-card2">
+                <div class="stat-label">Last Activity</div>
+                <div class="stat-value" id="lastActivity">{{ last_activity_time }}</div>
+                <div class="stat-label">{% if last_activity_type %}[{{ last_activity_type }}]{% endif %}</div>
+            </div>
+        </div>
+
+        <!-- Data Visualization -->
+        <div class="visualization-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Weekly Attendance Pattern</h3>
+                <canvas id="weeklyChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Daily Check-ins/outs</h3>
+                <canvas id="dailyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Attendance Records Table -->
+        <div class="table-container">
+            <h3 style="text-align: center; margin-bottom: 1.5rem;">Your Attendance Records</h3>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Check-in 1</th>
+                        <th>Check-out 1</th>
+                        <th>Check-in 2</th>
+                        <th>Check-out 2</th>
+                        <th>Check-in 3</th>
+                        <th>Check-out 3</th>
+                        <th>Check-in 4</th>
+                        <th>Check-out 4</th>
+                        <th>Total Hours</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for day in month_days %}
+                    <tr>
+                        <td data-label="Date">{{ day.date|date:"d-m-Y" }}</td>
+                        <td data-label="Day">{{ day.date|date:"l" }}</td>
+                        <td data-label="Check-in 1">
+                            {% if day.record and day.record.check_in_1 %}
+                            {{ day.record.check_in_1|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-out 1">
+                            {% if day.record and day.record.check_out_1 %}
+                            {{ day.record.check_out_1|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-in 2">
+                            {% if day.record and day.record.check_in_2 %}
+                            {{ day.record.check_in_2|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-out 2">
+                            {% if day.record and day.record.check_out_2 %}
+                            {{ day.record.check_out_2|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-in 3">
+                            {% if day.record and day.record.check_in_3 %}
+                            {{ day.record.check_in_3|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-out 3">
+                            {% if day.record and day.record.check_out_3 %}
+                            {{ day.record.check_out_3|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-in 4">
+                            {% if day.record and day.record.check_in_4 %}
+                            {{ day.record.check_in_4|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Check-out 4">
+                            {% if day.record and day.record.check_out_4 %}
+                            {{ day.record.check_out_4|time:"h:i A" }}
+                            {% else %}-{% endif %}
+                        </td>
+                        <td data-label="Total Hours" class="total-hours">
+                            {% if day.record %}{{ day.record.calculate_duration }}{% else %}-{% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>| Last updated: {% now "DATETIME_FORMAT" %} |</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Charts with Django template data
+        const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+        const weeklyChart = new Chart(weeklyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Hours Worked',
+                    data: JSON.parse('{{ weekly_hours|safe }}'),
+                    backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        }
+                    }
+                }
+            }
+        });
+
+        const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+        const dailyChart = new Chart(dailyCtx, {
+            type: 'line',
+            data: {
+                labels: JSON.parse('{{ date_labels|safe }}'),
+                datasets: [
+                    {
+                        label: 'Check-in Times',
+                        data: JSON.parse('{{ checkin_times|safe }}'),
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Check-out Times',
+                        data: JSON.parse('{{ checkout_times|safe }}'),
+                        backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                        
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        reverse: true,
+                        ticks: {
+                            callback: function (value) {
+                                // Convert numeric time to AM/PM format
+                                const hours = Math.floor(value);
+                                const minutes = Math.round((value - hours) * 60);
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const displayHours = hours % 12 || 12;
+                                return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

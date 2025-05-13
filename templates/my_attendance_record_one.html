@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Attendance Records</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Main Theme Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            color: #2ecc71;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Visualization Section */
+        .visualization-section {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-container {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Attendance Table */
+        .table-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow-x: auto;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .attendance-table thead th {
+            background: rgba(52, 152, 219, 0.7);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .attendance-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .attendance-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .attendance-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .present {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .absent {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .late {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .visualization-section {
+                flex-direction: column;
+            }
+
+            .stat-card {
+                min-width: 150px;
+            }
+
+            .attendance-table thead {
+                display: none;
+            }
+
+            .attendance-table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .attendance-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                text-align: right;
+            }
+
+            .attendance-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">Welcome back, {{ student.name }} <span id="employeeName">Mohamed Abdul Vadoo</span>!</h1>
+            <p class="welcome-subtitle">Here's your attendance summary for this month</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-label">Days Present</div>
+                <div class="stat-value" id="daysPresent">22</div>
+                <div class="stat-label">out of 26 working days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Average Hours</div>
+                <div class="stat-value" id="avgHours">8.2</div>
+                <div class="stat-label">per working day</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">On Time %</div>
+                <div class="stat-value" id="onTimePercent">92%</div>
+                <div class="stat-label">of your check-ins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Late Arrivals</div>
+                <div class="stat-value" id="lateDays">2</div>
+                <div class="stat-label">this month</div>
+            </div>
+        </div>
+
+        <!-- Data Visualization -->
+        <div class="visualization-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Monthly Attendance Overview</h3>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Daily Hours Distribution</h3>
+                <canvas id="hoursChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Attendance Records Table -->
+        <div class="table-container">
+            <h3 style="text-align: center; margin-bottom: 1.5rem;">Your Attendance Records</h3>
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day</th>
+                        <th>Status</th>
+                        <th>First Check-in</th>
+                        <th>Last Check-out</th>
+                        <th>Total Hours</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="Date">2023-06-01</td>
+                        <td data-label="Day">Monday</td>
+                        <td data-label="Status" class="present">Present</td>
+                        <td data-label="First Check-in">08:45 AM</td>
+                        <td data-label="Last Check-out">05:32 PM</td>
+                        <td data-label="Total Hours">8.7</td>
+                        <td data-label="Details"><button class="details-btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2023-06-02</td>
+                        <td data-label="Day">Tuesday</td>
+                        <td data-label="Status" class="present">Present</td>
+                        <td data-label="First Check-in">08:52 AM</td>
+                        <td data-label="Last Check-out">05:45 PM</td>
+                        <td data-label="Total Hours">8.8</td>
+                        <td data-label="Details"><button class="details-btn">View</button></td>
+                    </tr>
+                    <tr>
+                        <td data-label="Date">2023-06-05</td>
+                        <td data-label="Day">Friday</td>
+                        <td data-label="Status" class="late">Late</td>
+                        <td data-label="First Check-in">09:15 AM</td>
+                        <td data-label="Last Check-out">06:02 PM</td>
+                        <td data-label="Total Hours">8.7</td>
+                        <td data-label="Details"><button class="details-btn">View</button></td>
+                    </tr>
+                    <!-- More rows would be dynamically generated -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Smart Attendance System © 2023 | Last updated: <span id="updateTime"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Set current employee name (would come from backend in real implementation)
+        document.getElementById('employeeName').textContent = localStorage.getItem('employeeName') || ''; //calls emplyee after employee namee
+
+        // Set last updated time
+        document.getElementById('updateTime').textContent = new Date().toLocaleString();
+
+        // Initialize Charts
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        const attendanceChart = new Chart(attendanceCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Working Hours',
+                    data: [38.5, 42, 39.5, 40],
+                    backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                    borderColor: 'rgba(46, 204, 113, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours Worked'
+                        }
+                    }
+                }
+            }
+        });
+
+        const hoursCtx = document.getElementById('hoursChart').getContext('2d');
+        const hoursChart = new Chart(hoursCtx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: 30 }, (_, i) => i + 1),
+                datasets: [{
+                    label: 'Daily Hours',
+                    data: [8.5, 8.7, 8.2, 8.9, 8.1, 0, 0, 8.4, 8.6, 8.3, 8.7, 8.2, 8.5, 0, 0, 8.1, 8.8, 8.4, 8.6, 8.3, 8.7, 8.2, 8.5, 0, 0, 8.1, 8.8, 8.4, 8.6, 8.3],
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: 'rgba(52, 152, 219, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Day of Month'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Add click handlers for detail buttons
+        document.querySelectorAll('.details-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const date = row.cells[0].textContent;
+                alert(`Showing detailed attendance for ${date}`);
+                // In real implementation, would navigate to detail page or show modal
+            });
+        });
+    </script>
+</body>
+
+</html>

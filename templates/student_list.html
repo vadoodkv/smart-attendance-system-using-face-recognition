@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Consistent theme styles */
+        :root {
+            --primary-bg: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: 1px solid rgba(255, 255, 255, 0.2);
+            --accent-color: #3498db;
+            --table-header: rgba(52, 152, 219, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: var(--primary-bg);
+            color: #ffffff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: var(--card-border);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            
+        }
+
+        th {
+            background: var(--table-header);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            border-radius: 15px;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .status-tag {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-authorized {
+            background: rgba(46, 204, 113, 0.2);
+            color: #00ff6a;
+        }
+
+        .status-unauthorized {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-right: 0.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .action-btn i {
+            margin-right: 0.5rem;
+        }
+
+        .home-btn {
+            position: fixed;
+            top: 2.5rem;
+            right: 10rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 0.7rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            border: var(--card-border);
+            transition: all 0.3s ease;
+            
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .home-btn i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            th,
+            td {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Employee List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.phone_number }}</td>
+                    <td>{{ student.department }}</td>
+                    <td>
+                        <span
+                            class="status-tag {% if student.authorized %}status-authorized{% else %}status-unauthorized{% endif %}">
+                            {% if student.authorized %}Authorized{% else %}Unauthorized{% endif %}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{% url 'student-authorize' pk=student.pk %}" class="action-btn">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'home' %}" class="home-btn">
+        <i class="fas fa-home"></i> Home
+    </a>
+</body>
+
+</html>

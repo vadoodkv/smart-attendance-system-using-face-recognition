@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Registration | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Consistent with your login page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .registration-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .video-container {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        video {
+            width: 90%;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 90%;
+            padding: 12px 25px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .image-preview {
+            display: none;
+            margin: 1.5rem auto;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .back-link i {
+            margin-right: 5px;
+        }
+
+        canvas {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="registration-container">
+        <h1>Employee Registration</h1>
+
+        <div class="video-container">
+            <video id="video" autoplay></video>
+        </div>
+
+        <form id="registrationForm" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label for="name">User Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your username" required>
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="phone_number">Phone Number</label>
+                <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="input-group">
+                <label for="student_class">Department</label>
+                <input type="text" id="student_class" name="department" placeholder="Enter your department" required>
+            </div>
+
+            <canvas id="canvas" width="640" height="480"></canvas>
+            <input type="hidden" id="image_data" name="image_data">
+            <img id="imagePreview" class="image-preview" src="" alt="Captured Image Preview">
+
+            <button type="submit" class="btn" id="submitBtn">Complete Registration</button>
+
+            <a href="{% url 'home' %}" class="back-link">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+        </form>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const imageDataInput = document.getElementById('image_data');
+        const registrationForm = document.getElementById('registrationForm');
+        const imagePreview = document.getElementById('imagePreview');
+
+        // Access the webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+                video.play();
+            })
+            .catch(err => {
+                console.error("Error accessing the camera: ", err);
+                alert("Could not access the camera. Please check permissions.");
+            });
+
+        // Capture the image when the form is submitted
+        registrationForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Draw video frame to canvas
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/jpeg');
+            imageDataInput.value = dataURL;
+
+            // Show the captured image preview
+            imagePreview.src = dataURL;
+            imagePreview.style.display = 'block';
+
+            // Submit the form
+            registrationForm.submit();
+        });
+    </script>
+</body>
+
+</html>

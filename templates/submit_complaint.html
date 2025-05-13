@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Complaint - Smart Attendance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Inherit all existing theme styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            
+            color: #b2c7dd;
+        }
+
+        .container {
+            padding: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .messages p {
+            padding: 15px;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: rgba(212, 207, 207, 0.354);
+            border-left: 6px solid #2e9f33;
+        }
+
+        .complaint-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 4rem auto 2rem;
+            max-width: 800px;
+            box-shadow: 10px 8px 32px 5px rgba(29, 29, 30, 0.324);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1.3s ease;
+            padding-top: 0.5rem;
+        }
+
+        .complaint-form input,
+        .complaint-form textarea {
+            width: 95%;
+            padding: 0.9rem 1.4rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .complaint-form input:focus,
+        .complaint-form textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+        }
+
+        .complaint-form textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* Reuse existing button styles */
+        .btn.attendance-btn {
+            background: #58868565;
+            color: white;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            margin-left: 35rem;
+            border-start-start-radius: 15px;
+            border-end-end-radius: 15px;
+        }
+
+        .btn.attendance-btn:hover {
+            background: #40865db3;
+            transform: scale(1.05);
+        }
+
+        /* Back button styling matching theme */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 2px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: Fadei 1.5s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Inherit existing animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .complaint-container {
+                margin-top: 6rem;
+                padding: 1.5rem;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+        @keyframes Fadei {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="back-button"onclick="window.location.href='{% url 'employee_dashboard' %}'">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+
+        <div class="complaint-container">
+            <h1 class="welcome-title">Submit Complaint</h1>
+            <p class="welcome-subtitle">We're here to help resolve your issues</p>
+
+            <form method="POST" class="complaint-form">
+                {% csrf_token %}
+
+                {{ form.subject }}
+                {{ form.message }}
+
+                <button type="submit" class="btn attendance-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Complaint
+                </button>
+            </form>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+
+</html>

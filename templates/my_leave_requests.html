@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Leave Requests - Smart Attendance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Inherit all existing theme styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .leave-requests-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 4rem auto 2rem;
+            max-width: 800px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 2s ease;
+        }
+
+        .welcome-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            text-shadow: 4px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .welcome-title:after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            bottom: -10px;
+            left: 35%;
+            border-radius: 3px;
+        }
+
+        .leave-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+        }
+
+        .leave-table thead th {
+            background: rgba(57, 76, 88, 0.845);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(5px);
+            border-radius: 12px;
+        }
+
+        .leave-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .leave-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .leave-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+
+        .status-rejected {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .no-requests {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Back button styling */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeI 2s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .leave-requests-container {
+                margin-top: 6rem;
+                padding: 1.5rem;
+            }
+
+            .leave-table thead {
+                display: none;
+            }
+
+            .leave-table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+            }
+
+            .leave-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                text-align: right;
+                
+            }
+
+            .leave-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: rgba(255, 255, 255, 0.7);
+                
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeI {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="back-button"onclick="window.location.href='{% url 'employee_dashboard' %}'">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+
+        <div class="leave-requests-container">
+            <h1 class="welcome-title">My Leave Requests</h1>
+
+            {% if leave_requests %}
+            <table class="leave-table">
+                <thead>
+                    <tr>
+                        <th>Dates</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in leave_requests %}
+                    <tr>
+                        <td data-label="Dates">
+                            {{ req.start_date|date:"d M" }} - {{ req.end_date|date:"d M Y" }}
+                        </td>
+                        <td data-label="Reason">{{ req.reason|truncatechars:30 }}</td>
+                        <td data-label="Status" class="status-{{ req.status|lower }}">
+                            {{ req.status }}
+                        </td>
+                        <td data-label="Submitted On">
+                            {{ req.created_at|date:"d M Y" }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-requests">No leave requests found.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>

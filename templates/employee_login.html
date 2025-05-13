@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login | Smart Attendance System</title>
+    <style>
+        /* Reused from your main page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 360px;
+            box-shadow: 0 8px 25px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: rgba(198, 216, 216, 0.849);
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+            padding-right: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        input:hover {
+            
+            transform: translateX(8px);
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #0a5261;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #2f8751;
+            transform: translateY(5px);
+        }
+
+        .forgot-link {
+            display: block;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Face login option */
+        .face-login {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .face-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .face-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .emp-log {
+            color: #284151;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: rgba(129, 118, 118, 0.5);
+            border-left: 4px solid #300909;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <!-- Replace with your logo -->
+        <h2>SMART ATTENDANCE SYSTEM</h2>
+        <h2 class="emp-log">EMPLOYEE LOGIN</h2>
+
+        <form id="loginForm" method="post">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter Your Username" required >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter Your Password" required >
+            </div>
+
+            <button type="submit" class="btn">Sign In</button>
+
+            <a href="#" class="forgot-link">Forgot password?</a>
+        </form>
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    
+    </div>
+
+
+</body>
+
+</html>

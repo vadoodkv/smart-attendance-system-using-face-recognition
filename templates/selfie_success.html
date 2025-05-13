@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Consistent with your login/signup pages */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .success-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #2ecc71;
+            margin-bottom: 1.5rem;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-15px);
+            }
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .home-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 1rem;
+        }
+
+        .home-btn i {
+            margin-right: 8px;
+        }
+
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .approval-notice {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .countdown {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #00ffff, #00aa36b3);
+            transition: width 0.1s linear;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Registration Successful!</h1>
+        <p>Your account has been created successfully.</p>
+
+        <div class="approval-notice">
+            <i class="fas fa-clock"></i> Please wait for admin approval before accessing the system.
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="countdown">
+            Redirecting to home in <span id="countdown">10</span> seconds...
+        </div>
+
+        <a href="{% url 'employee_login' %}" class="home-btn">
+            <i class="fas fa-home"></i> Return Home Now
+        </a>
+    </div>
+
+    <script>
+        // Auto-redirect functionality
+        let seconds = 10;
+        const countdownElement = document.getElementById('countdown');
+        const progressBar = document.getElementById('progressBar');
+
+        const countdownInterval = setInterval(() => {
+            seconds--;
+            countdownElement.textContent = seconds;
+            progressBar.style.width = `${(10 - seconds) * 10}%`;
+
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = "{% url 'employee_login' %}";
+            }
+        }, 1000);
+
+        // Allow immediate navigation
+        document.querySelector('.home-btn').addEventListener('click', () => {
+            clearInterval(countdownInterval);
+        });
+    </script>
+</body>
+
+</html>

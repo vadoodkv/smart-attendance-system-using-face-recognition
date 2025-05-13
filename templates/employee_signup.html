@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Signup | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Consistent with login page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: rgb(255, 255, 255);
+        }
+
+        .signup-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 10px 80px 32px 2px rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: rgba(174, 200, 200, 0.849);
+        }
+        .emp-sig {
+            color: #284151;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input {
+            width: 91%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.3);
+            
+        }
+
+        input:hover {
+
+            transform: translateX(8px);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #0a5261;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #2f8751;
+            transform: translateY(5px);
+        }
+
+        .login-link {
+            display: block;
+            margin-top: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h2>SMART ATTENDANCE SYSTEM</h2>
+        <h2 class="emp-sig">EMPLOYEE SIGN UP</h2>
+
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Choose a username" required >
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+            </div>
+
+            <div class="input-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Retype your password"
+                    required>
+            </div>
+
+            <button type="submit" class="btn">Register Now</button>
+
+            <a href="{% url 'employee_login' %}" class="login-link">
+                Already have an account? Sign in instead
+            </a>
+        </form>
+    </div>
+</body>
+
+</html>

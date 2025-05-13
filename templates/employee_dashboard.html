@@ -1,0 +1,362 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Consistent with login/signup pages */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+            font-family:'Times New Roman', Times, serif;
+            overflow: hidden;
+
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+            
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2rem 1rem;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            animation: Fadein 2s ease;
+        }
+
+        .profile-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic {
+            width: 130px;
+            height: 130px;
+            border-radius: 35%;
+            object-fit: cover;
+            border: 3px solid rgba(255, 255, 255, 0.806);
+            margin-bottom: 0rem;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            margin-bottom: 0.1rem;
+            font-size: 1.8rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .employee-id {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin-top: 0.1rem;
+            
+
+
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            animation: Fadei 2s ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .greeting h1 {
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+            animation: Fadein 2s ease;
+            
+            
+        }
+
+        .greeting p {
+            opacity: 0.8;
+            animation: Fadein 1s ease;
+
+
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.8rem 2.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 50px;
+            
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.4s ease;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 10px 8px 32px 10px rgba(31, 38, 135, 0.1);
+            background: rgba(14, 13, 13, 0.315);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 23px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+            
+        }
+
+        .card p {
+            opacity: 0.7;
+            font-size: 0.9rem;
+            font-family: Courier, monospace;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+        @keyframes Fadein {
+            from{
+                opacity: 0;
+                transform: translateX(-70px);
+            }
+            to{
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+        @keyframes Fadei {
+            from{
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to{
+                opacity: 1;
+                transform: translateY(0px);
+            }
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="profile-section">
+                {% if student.image %}
+                <img src="{{ student.image.url }}" class="profile-pic" alt="Profile">
+                {% else %}
+                <div class="profile-pic"
+                    style="background-color: #3498db; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 2rem; color: white;">{{ student.name }}</span>
+                </div>
+                {% endif %}
+                <h3 class="employee-name">{{ student.name|title }}</h3>
+                <p class="employee-id"> Dept: {{ student.department }} | ID: {{ student.id }}</p>
+            </div>
+            
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-home"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"onclick="location.href='{% url 'my_attendance_record' %}'">
+                        <i class="fas fa-calendar-check"></i> Attendance
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"onclick="location.href='{% url 'submit_leave_request' %}'">
+                        <i class="fas fa-calendar-minus"></i> Leave Application
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"onclick="location.href='{% url 'export_attendance' %}'">
+                        <i class="fas fa-file-export"></i> Download Reports
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"onclick="location.href='{% url 'update_profile' %}'">
+                        <i class="fas fa-user-edit"></i> Update Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"onclick="location.href='{% url 'submit_complaint' %}'">
+                        <i class="fas fa-comment-dots"></i> Complaints
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="greeting">
+                    <h1>Welcome back,  {{ student.name|title }}</h1> 
+                    <p>Here's what's happening today</p>
+                </div>
+                <button class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="cards-grid">
+                <div class="card"onclick="location.href='{% url 'my_attendance_record' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>Attendance Records</h3>
+                    <p>View your daily attendance history and status</p>
+                </div>
+
+                <div class="card"onclick="location.href='{% url 'submit_leave_request' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-minus"></i>
+                    </div>
+                    <h3>Apply for Leave</h3>
+                    <p>Submit new leave requests and check status</p>
+                </div>
+
+                <div class="card"onclick="location.href='{% url 'submit_complaint' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <h3>Post Complaint</h3>
+                    <p>Submit complaints or feedback </p>
+                </div>
+
+                <div class="card"onclick="location.href='{% url 'export_attendance' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-file-export"></i>
+                    </div>
+                    <h3>Download Report</h3>
+                    <p>Generate and download your attendance report</p>
+                </div>
+
+                <div class="card"onclick="location.href='{% url 'update_profile' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h3>Update Profile</h3>
+                    <p>Edit your personal informations</p>
+                </div>
+
+                <div class="card"onclick="location.href='{% url 'my_leave_requests' %}'">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Leave Status</h3>
+                    <p>Know your leave request status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple logout functionality
+        document.querySelector('.logout-btn').addEventListener('click', function () {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href ="{% url 'main' %}" ;
+            }
+        });
+
+        // Make cards clickable
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function () {
+                // In a real app, this would navigate to the respective page
+                console.log('Navigating to:', this.querySelector('h3').textContent);
+            });
+        });
+    </script>
+</body>
+
+</html>

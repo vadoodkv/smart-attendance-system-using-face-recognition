@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smart Attendance System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+       
+        /* Consistent theme styles */
+ 
+        :root {
+            --primary-bg: linear-gradient(to bottom right, #0d0d28, #82d2d2);
+            --card-bg: rgba(255, 255, 255, 0.15);
+            --card-border: 1px solid rgba(255, 255, 255, 0.2);
+            --accent-color: #c2e6ff;
+            --download-color: #2ecc71;
+        }
+
+        /* [Previous CSS remains exactly the same until .cards-grid] */
+
+        /* Additional card style for download */
+        .card.download-card {
+            border: 3px solid rgba(46, 204, 113, 0.3);
+            
+        }
+
+    
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--primary-bg);
+            color: white;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Glassmorphism version */
+        .sidebar {
+            width: 250px;
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 2rem 1.5rem;
+            height: 100vh;
+            position: fixed;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            animation: Fadein 1.5s ease-in-out;
+        
+        
+
+        }
+
+        .sidebar h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .sidebar a i {
+            margin-right: 12px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 300px;
+            padding: 2rem;
+            min-height: 90vh;
+            animation: Fadei 1.5s ease-out;
+
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cards Grid - Glassmorphism */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: var(--card-border);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            background: rgba(14, 13, 13, 0.315);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .card p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        /* Home Button */
+        .home-button {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 0.6rem 2rem;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            border: var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .home-button:hover {
+            transform: translateY(-3px);
+            background: rgba(14, 13, 13, 0.315);
+
+        }
+
+        .home-button i {
+            margin-right: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        @keyframes Fadein {
+            from{
+                opacity: 0;
+                transform: translateX(-200px);
+            }
+            to{
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+        @keyframes Fadei {
+            from{
+                opacity: 0;
+                transform: translateY(500px);
+            }
+            to{
+                opacity: 1;
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <a href="#" class="active">
+            <i class="fab fa-windows"></i> Main  Panel
+        </a>
+        <a href="{% url 'capture_student' %}">
+            <i class="fas fa-user-plus"></i> Employee Registration
+        </a>
+        <a href="{% url 'student-list' %}">
+            <i class="fas fa-user-friends"></i> Manage Employees
+        </a>
+        <a href="{% url 'capture_and_recognize' %}">
+            <i class="fas fa-camera"></i> Launch Camera
+        </a>
+        
+    </div>
+
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1>Smart Attendance System</h1>
+            <p>Administrator Control Panel</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card"onclick="location.href='{% url 'student-list' %}'">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Total Employees</h3>
+                <p>{{ total_students }}</p>
+            </div>
+
+            <div class="card"onclick="location.href='{% url 'student_attendance_list' %}'">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Attendance Records</h3>
+                <p>{{ total_attendance }}</p>
+            </div>
+
+            <div class="card"onclick="location.href='{% url 'student_attendance_list' %}'">
+                <i class="fas fa-sign-in-alt"></i>
+                <h3>Total Check-Ins</h3>
+                <p>{{ total_check_ins }}</p>
+            </div>
+
+            <div class="card"onclick="location.href='{% url 'student_attendance_list' %}'">
+                <i class="fas fa-sign-out-alt"></i>
+                <h3>Total Check-Outs</h3>
+                <p>{{ total_check_outs }}</p>
+            </div>
+            <div class="card"onclick="location.href='{% url 'view_leave_requests' %}'">
+                <i class="fas fa-list"></i>
+                <h3>View Leave Requests</h3>
+                <p>{{ total_leave_request }}</p>
+            </div>
+            <div class="card"onclick="location.href='{% url 'view_complaints' %}'">
+                <i class="fa-solid fa-comments"></i>
+                <h3>View Complaints</h3>
+                <p>{{ total_complaints }}</p>
+            </div>
+
+            <div class="card"onclick="location.href='{% url 'camera_config_list' %}'">
+                <i class="fas fa-video"></i>
+                <h3>Active Cameras</h3>
+                <p>{{ total_cameras }}</p>
+            </div>
+
+            <div class="card download-card"onclick="location.href='{% url 'download_attendance_report' %}'">
+                <i class="fas fa-file-export"></i>
+                <h3>Download Reports</h3>
+                <p>Export attendance data</p>
+            </div>
+
+            
+        </div>
+    </div>
+
+    <a href="{% url 'main' %}" class="home-button">
+        <i class="fas fa-home"></i> Home
+    </a>
+</body>
+
+</html>

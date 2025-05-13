@@ -1,0 +1,296 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Attendance List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Main Theme Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 95%;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .heading {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 2.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
+
+        }
+
+        .heading:after {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.5);
+            bottom: -10px;
+            left: 35%;
+            border-radius: 3px;
+        }
+
+        /* Filter Controls */
+        .filter-container {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+        }
+
+        .search-input,
+        .date-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .search-btn,
+        .filter-btn {
+            padding: 0 1.2rem;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            background: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover,
+        .filter-btn:hover {
+            background: #2980b9;
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow-x: auto;
+        }
+
+        .attendance-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 10px;
+        }
+
+        .attendance-table thead th {
+            background: rgba(52, 152, 219, 0.7);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(5px);
+            border-radius: 3px;
+        }
+
+        .attendance-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .attendance-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .attendance-table td {
+            padding: 0.8rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Footer & Navigation */
+        .footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .attendance-table thead {
+                display: none;
+
+            }
+
+            .attendance-table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .attendance-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem 1rem;
+                text-align: right;
+            }
+
+            .attendance-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-right: 1rem;
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+        }
+        .tduration {
+            color: #000000;
+            font-size: 17px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="heading">Employee Attendance Records</h1>
+
+        <!-- Filter Controls -->
+        <form method="get" class="filter-container">
+            <div class="filter-group">
+                <input type="text" name="search" class="search-input" placeholder="Search students..."
+                    value="{{ search_query }}">
+                <button type="submit" class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="filter-group">
+                <input type="date" name="attendance_date" class="date-input" value="{{ date_filter }}">
+                <button type="submit" class="filter-btn">
+                    <i class="fas fa-calendar-alt"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- Attendance Table -->
+        <div class="table-container">
+            <table class="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Student Name</th>
+                        <th>Date</th>
+                        <th>Check-in 1</th>
+                        <th>Check-out 1</th>
+                        <th>Check-in 2</th>
+                        <th>Check-out 2</th>
+                        <th>Check-in 3</th>
+                        <th>Check-out 3</th>
+                        <th>Check-in 4</th>
+                        <th>Check-out 4</th>
+                        <th>Total Duration</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in student_attendance_data %}
+                    {% for attendance in data.attendance_records %}
+                    <tr>
+                        <td data-label="Image">
+                            {% if data.student.image %}
+                            <img src="{{ data.student.image.url }}" class="student-img" alt="{{ data.student.name }}">
+                            {% else %}
+                            <div class="no-image">N/A</div>
+                            {% endif %}
+                        </td>
+                        <td data-label="Name">{{ data.student.name }}</td>
+                        <td data-label="Date">{{ attendance.date }}</td>
+                        <td data-label="Check-in 1">{{ attendance.check_in_1|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-out 1">{{ attendance.check_out_1|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-in 2">{{ attendance.check_in_2|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-out 2">{{ attendance.check_out_2|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-in 3">{{ attendance.check_in_3|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-out 3">{{ attendance.check_out_3|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-in 4">{{ attendance.check_in_4|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Check-out 4">{{ attendance.check_out_4|date:"h:i A"|default:"-" }}</td>
+                        <td data-label="Duration" class="tduration">
+                            {% if attendance.check_in_1 %}
+                                {{ attendance.calculate_duration|default:"-" }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <button class="back-btn"onclick="location.href='{% url 'home' %}'">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Leave - Smart Attendance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Inherit existing theme styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+            color: #b2c7dd;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+
+        .messages p {
+            padding: 15px;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background: rgba(212, 207, 207, 0.354);
+            border-left: 6px solid #2e9f33;
+        }
+
+        .leave-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto 2rem;
+            max-width: 800px;
+            box-shadow: 10px 8px 32px 10px rgba(40, 40, 41, 0.468);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1.5s ease;
+        }
+
+        .welcome-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 4px 1px 3px rgba(0, 0, 0, 0.8);
+        }
+
+        .leave-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .date-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .leave-form input,
+        .leave-form textarea {
+            width: 95%;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+
+        .leave-form input:focus,
+        .leave-form textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.3);
+        }
+
+        .leave-form textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn.attendance-btn {
+            background: #33474e82;
+            color: white;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            width: 100%;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            
+        }
+
+        .btn.attendance-btn:hover {
+            background: #278850e1;
+            transform: scale(1.03);
+        }
+
+        /* Back button styling */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            right: 1px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: Fadei 1s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .leave-container {
+                margin-top: 6rem;
+                padding: 1.5rem;
+            }
+
+            .date-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes Fadei {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <button class="back-button"onclick="window.location.href='{% url 'employee_dashboard' %}'">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+
+        <div class="leave-container">
+            <h1 class="welcome-title">Apply for Leave</h1>
+
+            <form method="POST" class="leave-form">
+                {% csrf_token %}
+
+                <div class="date-inputs">
+                    <div>
+                        <label>Start Date</label>
+                        {{ form.start_date }}
+                    </div>
+                    <div>
+                        <label>End Date</label>
+                        {{ form.end_date }}
+                    </div>
+                </div>
+
+                <label>Reason for Leave</label>
+                {{ form.reason }}
+
+                <button type="submit" class="btn attendance-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Request
+                </button>
+            </form>
+
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+
+</html>

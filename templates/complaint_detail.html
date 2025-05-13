@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Details - Smart Attendance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Inherit all existing theme styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #0d0d28, #a1cfcf);
+            color: white;
+        }
+
+        .container {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            margin-top: -2.8rem;
+            
+        }
+
+        .back-button {
+            position: absolute;
+            top: 70px;
+            right: -50px;
+            padding: 12px 40px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .complaint-detail {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 4rem auto 2rem;
+            max-width: 800px;
+            box-shadow: 10px 8px 32px 10px rgba(36, 36, 37, 0.696);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: Fadein 1.5s ease;
+        }
+
+        .complaint-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .meta-item:hover {
+            background: rgba(18, 17, 17, 0.091);
+            
+        }
+        
+
+        .meta-item h3 {
+            color: #1e323f;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .complaint-content {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 12px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            margin-top: 1.5rem;
+            
+        }
+        .complaint-content:hover {
+            background: rgba(18, 17, 17, 0.091);
+            transform: scale3d(1.05, 1.05, 1.05);
+            
+        }
+
+        .complaint-content h3 {
+            margin-top: -4.8rem;
+            color: #1e323f;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .complaint-detail {
+                margin-top: 6rem;
+                padding: 1.5rem;
+            }
+
+            .complaint-meta {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            
+        }
+        @keyframes Fadein {
+            from{
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to{
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <button class="back-button"onclick="window.location.href='{% url 'view_complaints' %}'">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </button>
+
+        <div class="complaint-detail">
+            <div class="complaint-meta">
+                <div class="meta-item">
+                    <h3>Date & Time</h3>
+                    <p>{{ complaint.date|date:"d M Y H:i" }}</p>
+                </div>
+                <div class="meta-item">
+                    <h3>Employee Name</h3>
+                    <p>{{ complaint.student.name }}</p>
+                </div>
+                <div class="meta-item">
+                    <h3>Department</h3>
+                    <p>{{ complaint.student.department }}</p>
+                </div>
+            </div>
+
+            <div class="meta-item">
+                <h3>Subject</h3>
+                <p>{{ complaint.subject }}</p>
+            </div>
+
+            <div class="complaint-content">
+                <h3>Full Complaint:</h3>
+                <p>{{ complaint.message }}</p>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
