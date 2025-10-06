@@ -27,3 +27,4 @@ urllib3==2.2.2
 pandas
 google.generativeai
 pymupdf
+gunicorn
